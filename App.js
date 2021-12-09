@@ -1,14 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import { Home, Login, Rastreio, AreaUser } from './src/screens/index'
+
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 export default function App() {
+  const Stack = createNativeStackNavigator()
+
   return (
-    <View style={styles.container}>
-      <Text>Hello</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <NavigationContainer>
+
+      <Stack.Navigator>
+
+        <Stack.Screen 
+          name="Home" component={Home}
+          options={{
+            title:'LOG10',
+            headerStyle: {backgroundColor: '#4b0082'},
+            headerTintColor: '#fff',
+            headerTitleStyle: {fontWeight: 'bold'},
+            headerTitleAlign: 'center'
+          }} />
+
+        <Stack.Screen name="Login" component={Login} 
+          options={{
+            headerShown: false
+          }} />
+
+        <Stack.Screen name="Rastreio" component={Rastreio} />
+
+        <Stack.Screen name="AreaUser" component={AreaUser} />
+
+      </Stack.Navigator>
+
+    </NavigationContainer>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -18,4 +45,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+})
