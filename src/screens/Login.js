@@ -3,10 +3,38 @@ import {
     View, TextInput, Image, StyleSheet, Text, ImageBackground,
     KeyboardAvoidingView, Dimensions, TouchableOpacity, Platform } from 'react-native'
 import imageBG from '../../assets/img/imageBackground.png'
+import AuthInput from '../components/AuthInput'
+import { faLock, faAt } from '@fortawesome/free-solid-svg-icons'
 
 export default function Login(props) {
 
     const [display, setDisplay] = useState('none')
+    const [user, setUser] = useState(null)
+    const [password, setPassword] = useState(null)
+    const [login, setLogin] = useState(null)
+
+    async function sendForm() {
+        let response = await fetch('http://192.168.1.3:3000/login',{
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: user,
+                password: password
+            })
+        })
+
+        let json = await response.json()
+        
+        if (json === 'error') {
+            setDisplay('flex')
+            setTimeout(() => {
+                setDisplay('none')
+            }, 5000)
+        }
+    }
 
     return (
         <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
@@ -20,28 +48,25 @@ export default function Login(props) {
 
                 <View>
 
-                    <Text style={styles.mensagemAlerta(display)}>Usuárioou senha inválios :(</Text>
+                    <Text style={styles.mensagemAlerta(display)}>Usuário ou senha inválidos :(</Text>
 
                 </View>
 
                 <View>
-                <TextInput 
-                    placeholder='E-mail'
-                    autoCorrect={false}
-                    onChangeText={() => {}}
-                    style={styles.input}
-                    />
 
-                <TextInput 
-                    placeholder='Senha'
-                    secureTextEntry= {true}
-                    autoCorrect={false}
-                    onChangeText={() => {}}
-                    style={styles.input}
-                />
+                    <AuthInput icon={faAt} placeholder='Email' value={user} 
+                        style={styles.input} keyboardType='email-address'
+                        onChangeText={text => setUser(text)} />
+
+                    <AuthInput icon={faLock} 
+                        placeholder='Senha' value={password} 
+                        style={styles.input} 
+                        onChangeText={text => setPassword(text)}  
+                        secureTextEntry={true} />
+                    
                 </View>
 
-                <TouchableOpacity style={styles.botaoLogin}>
+                <TouchableOpacity style={styles.botaoLogin} onPress={()=>sendForm()}>
                     <Text style={styles.loginText}>
                         Faça Login!
                     </Text>
@@ -85,17 +110,6 @@ const styles = StyleSheet.create({
         marginVertical: 15,
         display: text,
     }),
-    input: {
-        backgroundColor: '#fff',
-        borderColor: '#ddd',
-        borderWidth: 1,
-        width: Dimensions.get('window').width * 0.9,
-        marginBottom: 15,
-        color: '#222',
-        fontSize: 16,
-        borderRadius: 10,
-        padding: 10
-    },
     botaoLogin: {
         backgroundColor: '#789ac7',
         width: '90%',
@@ -114,5 +128,5 @@ const styles = StyleSheet.create({
     },
     registrarText: {
         color: '#000'
-    }
+    },
   })
