@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { Home, Login, Rastreio, AreaUser } from './src/screens/index'
+import { Home, Login, Rastreio } from './src/screens/index'
+import AreaUser from './src/screens/AreaUser'
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'

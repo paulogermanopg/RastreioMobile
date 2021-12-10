@@ -1,18 +1,64 @@
 import React, {useState, useEffect} from 'react'
 import { 
     View, TextInput, Image, StyleSheet, Text, ImageBackground,
-    KeyboardAvoidingView, Dimensions, TouchableOpacity, Platform } from 'react-native'
+    KeyboardAvoidingView, Dimensions, TouchableOpacity, Platform, AsyncStorage,
+    Alert } from 'react-native'
 import imageBG from '../../assets/img/imageBackground.png'
 import AuthInput from '../components/AuthInput'
-import { faLock, faAt } from '@fortawesome/free-solid-svg-icons'
+import { faLock, faUser } from '@fortawesome/free-solid-svg-icons'
+import '@react-native-async-storage/async-storage'
+import * as LocalAuthentication from 'expo-local-authentication'
 
 export default function Login(props) {
 
     const [display, setDisplay] = useState('none')
     const [user, setUser] = useState(null)
     const [password, setPassword] = useState(null)
-    const [login, setLogin] = useState(null)
+    const [login, setLogin] = useState(false)
 
+    useEffect(() => {
+        verifyLogin()
+    }, [])
+
+    useEffect(() => {
+        if (login === true) {
+            biometric()
+        }
+    }, [login])
+
+    //verificação de login
+    async function verifyLogin(){
+        let response = await AsyncStorage.getItem('userData')
+        let json = await JSON.parse(response)
+        
+        if (json !== null) {
+            setUser(json.name)
+            setPassword(json.password)
+            setLogin(true)
+        }
+    }
+
+    //biometria
+    async function biometric(){
+        let compatible = await LocalAuthentication.hasHardwareAsync()
+        if (compatible) {
+            let biometricRecords = await LocalAuthentication.isEnrolledAsync()
+            if (!biometricRecords){
+                Alert.alert('Sem biometrias no sistema :(', 'ok')
+            } else {
+                let result = await LocalAuthentication.authenticateAsync()
+                if (result.success) {
+                    sendForm()
+                } else {
+                    setUser(null)
+                    setPassword(null)
+                }
+            }
+        }
+    }
+
+
+    //enviar dados para o back
     async function sendForm() {
         let response = await fetch('http://192.168.1.3:3000/login',{
             method: 'POST',
@@ -33,6 +79,10 @@ export default function Login(props) {
             setTimeout(() => {
                 setDisplay('none')
             }, 5000)
+            await AsyncStorage.clear()
+        } else {
+           await AsyncStorage.setItem('userData', JSON.stringify(json))
+           props.navigation.navigate('AreaUser')
         }
     }
 
@@ -54,7 +104,7 @@ export default function Login(props) {
 
                 <View>
 
-                    <AuthInput icon={faAt} placeholder='Email' value={user} 
+                    <AuthInput icon={faUser} placeholder='Usuário' value={user} 
                         style={styles.input} keyboardType='email-address'
                         onChangeText={text => setUser(text)} />
 

@@ -1,14 +1,24 @@
-import React from 'react'
-import { View, Text, StyleSheet, Button } from 'react-native'
+import React, {useEffect, useState} from 'react'
+import { View, Text, StyleSheet, Button, AsyncStorage } from 'react-native'
+import '@react-native-async-storage/async-storage'
 
 export default function AreaUser(props) {
+
+    const [user, setUser] = useState(null) 
+
+    useEffect(() => {
+        async function getUser(){
+            let response = await AsyncStorage.getItem('userData')
+            let json = JSON.parse(response)
+            setUser(json.name)
+        }
+        getUser()
+    }, [])
+
     return (
         <View>
-            <Text>AreaUser</Text>
-            <Button title='Go to Login' onPress={() => props.navigation.navigate('Login', {
-                user: 'mistério',
-                senha: '123'
-            })} />
+            <Text>Bom dia {user}</Text>
+            
         </View>
     )
 }
