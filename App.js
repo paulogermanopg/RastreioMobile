@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Home, Login, Rastreio } from './src/screens/index'
-import AreaUser from './src/screens/AreaUser'
+import AreaUser from './src/screens/areaUser/AreaUser'
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -31,7 +31,7 @@ export default function App() {
 
         <Stack.Screen name="Rastreio" component={Rastreio} />
 
-        <Stack.Screen name="AreaUser" component={AreaUser} />
+        <Stack.Screen name="AreaUser"  options={{headerShown: false}} component={AreaUser} />
 
       </Stack.Navigator>
 

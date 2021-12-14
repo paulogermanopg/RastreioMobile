@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import { 
-    View, TextInput, Image, StyleSheet, Text, ImageBackground,
-    KeyboardAvoidingView, Dimensions, TouchableOpacity, Platform, AsyncStorage,
+    View, Image, StyleSheet, Text, ImageBackground,
+    KeyboardAvoidingView, Dimensions, TouchableOpacity, Platform,
     Alert } from 'react-native'
 import imageBG from '../../assets/img/imageBackground.png'
 import AuthInput from '../components/AuthInput'
 import { faLock, faUser } from '@fortawesome/free-solid-svg-icons'
-import '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as LocalAuthentication from 'expo-local-authentication'
 
 export default function Login(props) {
@@ -60,7 +60,7 @@ export default function Login(props) {
 
     //enviar dados para o back
     async function sendForm() {
-        let response = await fetch('http://192.168.1.3:3000/login',{
+        let response = await fetch('http://192.168.1.4:3000/login',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
