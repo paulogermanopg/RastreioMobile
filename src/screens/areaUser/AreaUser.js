@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { View, Text, StyleSheet, Button } from 'react-native'
+import { View, Text, StyleSheet, BackHandler, Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -20,6 +20,31 @@ export default function AreaUser(props) {
         }
         getUser()
     }, [])
+
+    //BackHandler com Alert para sair do App
+    useEffect(() => {
+      const backAction = () => {
+        Alert.alert("Alerta!", "Quer realmente sair do Aplicativo?", [
+          {
+            text: "Cancelar",
+            onPress: () => null,
+            style: "cancel"
+          },
+          { text: "Sim", onPress: () => {
+            props.navigation.navigate('Home')
+            BackHandler.exitApp()
+          } }
+        ]);
+        return true;
+      };
+  
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+  
+      return () => backHandler.remove();
+    }, []);
 
     return (
         <Tab.Navigator
