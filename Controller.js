@@ -22,6 +22,24 @@ app.post('/login', async(req,res) => {
     }
 })
 
+app.post('/verifyPassword', async(req,res) => {
+    let response = await user.findOne({
+        where:{id:req.body.id, password:req.body.oldPassword}
+    })
+    if (response === null) {
+        res.send(JSON.stringify('Senha inválida'))
+    } else {
+        if (req.body.newPassword === req.body.checkNewPassword) {
+            response.password=req.body.newPassword
+            response.save()
+            res.send(JSON.stringify('Senha atualizada com sucesso :)'))
+        } else {
+            res.send(JSON.stringify('Nova senha não confere'))
+        }
+        
+    }
+})
+
 let port = process.env.PORT || 3000
 
 app.listen(port, (req, res) => {

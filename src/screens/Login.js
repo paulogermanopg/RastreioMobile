@@ -8,6 +8,7 @@ import AuthInput from '../components/AuthInput'
 import { faLock, faUser } from '@fortawesome/free-solid-svg-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as LocalAuthentication from 'expo-local-authentication'
+import config from '../../config/config.json'
 
 export default function Login(props) {
 
@@ -60,7 +61,7 @@ export default function Login(props) {
 
     //enviar dados para o back
     async function sendForm() {
-        let response = await fetch('http://192.168.1.4:3000/login',{
+        let response = await fetch(`${config.urlRoot}login`,{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
